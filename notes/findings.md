@@ -7,9 +7,10 @@ Ortam notu: bu oturumdaki tüm koşular Windows 11 / RTX 5070 (12.2 GB) / torch
 makinesi değil. Mutlak süreler o makinede farklı çıkabilir; oranlar korunur.
 
 **İlgili belgeler:**
+[tables.md](tables.md) — tüm sonuç tabloları (tek dosya) ·
 [data-notes.md](data-notes.md) — veri seti yapısı, alanlar, tuzaklar ·
 [error-taxonomy.md](error-taxonomy.md) — hata kırpıntılarının görsel sınıflandırması ·
-`outputs/tables/` — birleştirilmiş kalıcı CSV'ler
+`outputs/tables/` — aynı tabloların makine tarafından okunabilir CSV hâli
 
 ## ÖLÇÜLMEDİ — açık kalan metrikler
 
