@@ -1,0 +1,67 @@
+{
+  "tag": "baseline_b_attributed",
+  "baseline": "B (YOLO-World zero-shot)",
+  "model": "yolov8s-worldv2.pt",
+  "prompt_set": "attributed",
+  "prompt_set_description": "(b) oznitelikli ifadeler - gorunum/baglam betimlemeleri, sinif basina birden fazla",
+  "prompts": [
+    {
+      "text": "person floating in the water",
+      "category_id": 1
+    },
+    {
+      "text": "person wearing an orange life vest",
+      "category_id": 1
+    },
+    {
+      "text": "swimmer in the sea seen from above",
+      "category_id": 1
+    },
+    {
+      "text": "boat on the water seen from above",
+      "category_id": 2
+    },
+    {
+      "text": "small motorboat with people on board",
+      "category_id": 2
+    },
+    {
+      "text": "jet ski on the water",
+      "category_id": 3
+    },
+    {
+      "text": "personal watercraft with a rider",
+      "category_id": 3
+    },
+    {
+      "text": "orange life ring floating in the water",
+      "category_id": 4
+    },
+    {
+      "text": "rescue float thrown into the sea",
+      "category_id": 4
+    },
+    {
+      "text": "small round buoy floating in water",
+      "category_id": 5
+    },
+    {
+      "text": "navigation marker buoy",
+      "category_id": 5
+    }
+  ],
+  "imgsz": 640,
+  "conf": 0.001,
+  "iou_nms": 0.7,
+  "max_det": 300,
+  "n_images": 1547,
+  "n_detections": 74643,
+  "dedup_removed_by_class_nms": 6355,
+  "wall_seconds": 93.15,
+  "mean_speed_ms": {
+    "preprocess": 1.07,
+    "inference": 1.88,
+    "postprocess": 1.58
+  },
+  "note": "hiz kaba gostergedir; resmi olcum 08_benchmark_speed.py"
+}

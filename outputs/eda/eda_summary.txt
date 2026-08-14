@@ -1,0 +1,2 @@
+train: 8930 goruntu, 57760 nesne, 3130 goruntude irtifa metasi yok
+val: 1547 goruntu, 9630 nesne, 517 goruntude irtifa metasi yok

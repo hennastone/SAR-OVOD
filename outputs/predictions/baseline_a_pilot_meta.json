@@ -1,0 +1,17 @@
+{
+  "tag": "baseline_a_pilot",
+  "weights": "outputs/runs/baseline_a_pilot_640/weights/best.pt",
+  "imgsz": 640,
+  "conf": 0.001,
+  "iou_nms": 0.7,
+  "max_det": 300,
+  "n_images": 1547,
+  "n_detections": 58433,
+  "wall_seconds": 93.29,
+  "mean_speed_ms": {
+    "preprocess": 1.07,
+    "inference": 1.64,
+    "postprocess": 1.45
+  },
+  "note": "hiz sadece kaba gostergedir; resmi olcum 08_benchmark_speed.py"
+}

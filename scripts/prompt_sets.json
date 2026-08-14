@@ -1,0 +1,31 @@
+{
+  "_note": "Her sorgu bir SeaDronesSee category_id'sine eslenir. Bir sinifa birden fazla sorgu eslenebilir (cok-e-bir); bu durumda ayni nesne uzerinde birden fazla prompt atesleyebilecegi icin esleme sonrasi sinif-bazli NMS uygulanir. Sorgu metinleri bir arastirma degiskenidir - bunlar baslangic noktasi, sabit gercek degil.",
+
+  "canonical": {
+    "description": "(a) kanonik sinif adlari - SeaDronesSee etiket isimlerinin dogrudan karsiligi",
+    "prompts": [
+      {"text": "swimmer", "category_id": 1},
+      {"text": "boat", "category_id": 2},
+      {"text": "jetski", "category_id": 3},
+      {"text": "life saving appliance", "category_id": 4},
+      {"text": "buoy", "category_id": 5}
+    ]
+  },
+
+  "attributed": {
+    "description": "(b) oznitelikli ifadeler - gorunum/baglam betimlemeleri, sinif basina birden fazla",
+    "prompts": [
+      {"text": "person floating in the water", "category_id": 1},
+      {"text": "person wearing an orange life vest", "category_id": 1},
+      {"text": "swimmer in the sea seen from above", "category_id": 1},
+      {"text": "boat on the water seen from above", "category_id": 2},
+      {"text": "small motorboat with people on board", "category_id": 2},
+      {"text": "jet ski on the water", "category_id": 3},
+      {"text": "personal watercraft with a rider", "category_id": 3},
+      {"text": "orange life ring floating in the water", "category_id": 4},
+      {"text": "rescue float thrown into the sea", "category_id": 4},
+      {"text": "small round buoy floating in water", "category_id": 5},
+      {"text": "navigation marker buoy", "category_id": 5}
+    ]
+  }
+}

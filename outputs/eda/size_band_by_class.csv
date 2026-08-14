@@ -1,0 +1,11 @@
+split,category_name,<16,16-32,32-64,>64
+train,boat,27,1313,2750,8932
+train,buoy,352,897,1818,1322
+train,jetski,21,260,865,1184
+train,life_saving_appliances,77,550,291,5
+train,swimmer,2707,15567,14587,4235
+val,boat,1,165,395,1653
+val,buoy,55,251,81,173
+val,jetski,0,8,84,228
+val,life_saving_appliances,5,231,94,0
+val,swimmer,121,2129,3197,759

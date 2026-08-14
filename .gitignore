@@ -1,0 +1,47 @@
+# ---------------------------------------------------------------- veri
+# Ham veri seti (salt-okunur, ~9.5 GB) ve indirilen arsiv
+/data/
+/archive.zip
+
+# ---------------------------------------------------------------- turetilen buyuk ciktilar
+# YOLO format agaci (~7.0 GB). Goruntuler data/ altina HARDLINK ile bagli;
+# git hardlink'i normal dosya olarak gorup tum icerigi depoya yazar.
+# 02_prepare_yolo_dataset.py saniyeler icinde yeniden uretir.
+# Dizinin kendisi degil alt dizinleri disliyoruz: ust dizin ignore edilirse
+# icindeki dosyalar icin istisna tanimlanamiyor, oysa class_mapping.json
+# (sinif indeksi sozlesmesi, 300 bayt) tutulmaya deger.
+/outputs/yolo_dataset/images/
+/outputs/yolo_dataset/labels/
+# Makineye ozgu mutlak yol iceriyor (path: C:\...), baska makinede yaniltici olur
+/outputs/yolo_dataset/data.yaml
+
+# Hata kirpintilari (~672 MB). 08_error_analysis.py yeniden uretir.
+# Kucuk bir kanit ornegi commit'lemek isterseniz: --max-crops 6 ile uretip
+# asagidaki satiri gecici olarak yorum yapin.
+/outputs/error_analysis/*/crops/
+
+# ---------------------------------------------------------------- model agirliklari
+# Egitilmis ve indirilen agirliklar. Tekrar uretilebilirligin capasi
+# outputs/predictions/*.json (bunlar commit'leniyor) - agirlik olmadan da
+# 05/07/08 GPU'suz kosturulabiliyor.
+*.pt
+*.onnx
+*.engine
+
+# ---------------------------------------------------------------- python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# ---------------------------------------------------------------- isletim sistemi
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------------------------------------------------------------- NOT
+# Grafikler (*.png / *.jpg) bilerek ignore EDILMIYOR: notes/findings.md
+# bunlara atif veriyor ve outputs/{eda,comparison,metrics,runs} ile
+# error_analysis/*/figures toplami ~8 MB. Buyuk goruntu kumeleri zaten
+# yukaridaki dizin kurallariyla disarida.

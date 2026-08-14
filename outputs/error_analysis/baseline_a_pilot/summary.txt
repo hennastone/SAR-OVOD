@@ -1,0 +1,36 @@
+=== baseline_a_pilot | conf>=0.25, IoU>=0.5 ===
+
+TP: 7435   FP: 2373   FN: 2195
+precision: 0.7581   recall: 0.7721
+
+Yanlis pozitif tipi (baskin hata modu):
+  background          277  ( 11.7%)
+  class_confusion     137  (  5.8%)
+  localization       1595  ( 67.2%)
+  duplicate           364  ( 15.3%)
+
+FP tipi x boyut bandi:
+fp_type    background  class_confusion  duplicate  localization
+size_band                                                      
+<16                 9                1          4             1
+16-32              90               22         42           411
+32-64             145               53        253           959
+>64                33               61         65           224
+
+Sinif karisikligi (tahmin -> gercek):
+confused_with           boat  buoy  jetski  life_saving_appliances  swimmer
+category                                                                   
+boat                       0     0      22                       0       11
+buoy                       1     0       0                       0        6
+jetski                     7     4       0                       0       22
+life_saving_appliances     0     1       0                       0        7
+swimmer                    1     2       0                      53        0
+
+Yanlis negatif, boyut bandina gore:
+size_band
+<16       150
+16-32    1220
+32-64     640
+>64       185
+
+ECE (guven kalibrasyon hatasi): 0.1372
