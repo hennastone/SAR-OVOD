@@ -1,0 +1,13 @@
+split,category,n_instances,n_images_containing,pct_images_containing,mean_instances_per_containing_image,pct_of_split_instances
+train,swimmer,37096,6898,77.25,5.378,64.22
+train,boat,13022,5870,65.73,2.218,22.55
+train,buoy,4389,3722,41.68,1.179,7.6
+train,jetski,2330,2328,26.07,1.001,4.03
+train,life_saving_appliances,923,665,7.45,1.388,1.6
+train,ALL,57760,8930,100.0,6.468,100.0
+val,swimmer,6206,1286,83.13,4.826,64.44
+val,boat,2214,915,59.15,2.42,22.99
+val,buoy,560,352,22.75,1.591,5.82
+val,life_saving_appliances,330,191,12.35,1.728,3.43
+val,jetski,320,320,20.69,1.0,3.32
+val,ALL,9630,1547,100.0,6.225,100.0

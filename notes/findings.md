@@ -6,6 +6,110 @@ Ortam notu: bu oturumdaki tüm koşular Windows 11 / RTX 5070 (12.2 GB) / torch
 2.12.0.dev+cu128 / ultralytics 8.4.41 üzerinde yapıldı — CLAUDE.md'de yazan Ubuntu
 makinesi değil. Mutlak süreler o makinede farklı çıkabilir; oranlar korunur.
 
+**İlgili belgeler:**
+[data-notes.md](data-notes.md) — veri seti yapısı, alanlar, tuzaklar ·
+[error-taxonomy.md](error-taxonomy.md) — hata kırpıntılarının görsel sınıflandırması ·
+`outputs/tables/` — birleştirilmiş kalıcı CSV'ler
+
+## ÖLÇÜLMEDİ — açık kalan metrikler
+
+Bu başlık bilerek en üstte. Aşağıdakiler hiçbir yerde kayıtlı değil; ilgili
+CSV hücreleri **boş bırakıldı**, tahminle doldurulmadı.
+
+| Metrik | Durum | Nerede boş |
+|---|---|---|
+| Görüntü başına gecikme (batch=1) | **Ölçülmedi** — adım 5 hiç koşmadı | `outputs/tables/timing.csv` → `latency_ms_batch1` |
+| FPS (batch=1) | **Ölçülmedi** | `timing.csv` → `fps_batch1` |
+| Isınma turları hariç tutulmuş zamanlama | **Ölçülmedi** | `timing.csv` → `warmup_excluded` |
+| Baseline A tam koşu (1280, 100 epoch) | **Koşulmadı** — ~8.2 saat | tüm sonuç tabloları 640 pilotuna ait |
+
+`timing.csv`'de dolu olan sütunlar (`preprocess_ms`, `inference_ms`,
+`postprocess_ms`, `throughput_img_per_s_wallclock`) tahmin koşusunun yan ürünü:
+**chunk=16 ile alındı, batch=1 değil ve ısınma turları hariç tutulmadı.**
+Karşılaştırmalı hız iddiası için kullanılamaz; satırdaki `measurement_note`
+sütunu bunu taşıyor.
+
+Ayrıca ölçülmemiş, daha küçük başlıklar: görsel taksonomi örnekleminin tüm
+hata kümesine genellenebilirliği; anotasyon eksikliğinin sistematikliği;
+`kume_halinde` FN'lerin NMS eşiğine duyarlılığı; sorgu metni duyarlılığının
+sistematik taraması; irtifanın etkisi (drone tipinden ayrıştırılamıyor).
+
+---
+
+## 2026-08-14 — Sonuçların kalıcı tablolara toplanması + kırpıntıların görsel incelemesi
+
+- **Çalıştırılan:** (yeni deney yok, mevcut çıktılardan türetildi)
+  - `scripts/09_build_tables.py` → `outputs/tables/` altında 7 CSV
+  - `scripts/10_contact_sheet.py --tag baseline_a_pilot --bucket {fp_background, fn, fn/swimmer}`
+    → kontakt sayfaları + indeks CSV'leri
+  - Kontakt sayfalarının gözle incelenmesi ve etiketlenmesi
+
+- **Sonuç:**
+
+  `outputs/tables/`: `dataset_stats.csv`, `size_distribution.csv`,
+  `results_closed_set.csv`, `results_openvocab.csv`, `errors_summary.csv`,
+  `calibration.csv`, `timing.csv`, ve görsel taksonomi etiketlerim
+  (`fp_visual_taxonomy_sample.csv`, `fn_visual_taxonomy_sample.csv`).
+
+  Sınıf×bant precision/recall daha önce hiç hesaplanmamıştı; **TP = GT − FN**
+  özdeşliğinden türetildi. Üç modelde de 08'in raporladığı TP ile birebir tuttu
+  (7435 / 1057 / 2693), yani türetme kesin — script bu kontrolü her koşuda
+  yapıyor ve uyuşmazsa hata veriyor.
+
+  Görsel taksonomi, `background` FP örneklemi (n=81/225):
+
+  | Kategori | n | % | ort. kenar | ort. güven |
+  |---|---|---|---|---|
+  | belirsiz | 39 | 48.1 | 24.1 px | 0.35 |
+  | gerçek anotasyonsuz insan | 20 | 24.7 | 122.3 px | 0.44 |
+  | gerçek anotasyonsuz deniz aracı | 8 | 9.9 | 74.4 px | 0.49 |
+  | gerçek anotasyonsuz tekne | 7 | 8.6 | 62.9 px | 0.72 |
+  | dalga köpüğü / parıltı | 4 | 4.9 | 36.0 px | 0.33 |
+  | gerçek anotasyonsuz can simidi | 3 | 3.7 | 32.3 px | 0.67 |
+
+  Kaçırılan swimmer örneklemi (n=48): `sadece_bas` %37.5 (14 px),
+  `net_izole` %16.7 (31 px), `dusuk_kontrast` %12.5, `dusuk_isik` %10.4,
+  `kopuk_icinde` %10.4, `kume_halinde` %8.3, `batik_golge` %4.2.
+
+- **Dikkat çeken:**
+  1. **Deneyin başlangıç hipotezi bu örneklemde çürüdü.** "Köpük/yansıma/kaya
+     insana benziyor" beklentisinin karşılığı olan kategori `background`
+     FP'lerin sadece **%4.9'u**. Buna karşılık **%47'si anotasyonu yapılmamış
+     gerçek nesne** — can yelekli yüzücüler, tekneler, jetskiler, can simitleri.
+     Yani model doğru bulmuş, veri seti etiketlememiş.
+  2. **Bunun doğrudan sonucu: raporladığımız precision bir alt sınır.**
+     Baseline A'nın 0.758 precision'ı, FP'lerin yarıya yakını aslında doğru
+     olduğu için gerçek değerin altında. Tez metninde bu çekinceyle sunulmalı.
+     Bu, adım 4'te "background %11.7" diye raporlanan sayının yorumunu da
+     değiştiriyor: o %11.7'nin çoğu model hatası değil, etiket eksiği.
+  3. **Kaçırmaların baskın mekanizması "görünür imzanın küçülmesi".**
+     En kalabalık FN kategorisi `sadece_bas` (%37.5): gövde su altında, geriye
+     tek bir kırmızı bone ya da koyu baş kalıyor. Kutu 14 px olsa bile ayırt
+     edici piksel çok daha az; 640'a ölçeklenince ~2 px. "Küçük nesne zor"
+     ifadesinin bu veri setindeki somut mekanizması bu.
+  4. **Kontrast, boyuttan bağımsız olarak belirleyici.** `dusuk_kontrast` +
+     `dusuk_isik` + `batik_golge` toplamı %27 ve bunların bir kısmı 31 px —
+     yani küçük bant dışında. Yalnızca ölçek odaklı bir açıklama bu grubu kaçırır.
+  5. `<16` bandındaki (11-13 px) background FP kırpıntılarının **tamamı**
+     belirsiz çıktı. Bu bir ölçüm sınırı: o boyutta hata tipi gözle ayırt
+     edilemiyor, dolayısıyla o bant için "baskın hata modu şudur" demek mümkün değil.
+  6. Güven skoru hata tipiyle korele: en yüksek ortalama güven gerçek-ama-etiketsiz
+     teknelerde (0.72), en düşük köpük/parıltıda (0.33). ECE 0.137 olmasına
+     rağmen güven skoru tamamen bilgisiz değil.
+  7. **İrtifa eksikliği drone tipiyle birebir örtüşüyor** (`mavic` hepsinde var,
+     `m210`/`trinity` hiçbirinde). Ayrıca `meta` sözlüğü var ama irtifa `None`
+     olan 412 train / 63 val görüntü var, hepsi `trinity`. Yani irtifa etkisi ile
+     platform etkisi bu veride ayrıştırılamıyor. Ayrıntı: [data-notes.md](data-notes.md).
+
+- **Sonraki soru:** `net_izole` kategorisi (%16.7) — boş suda, turuncu can
+  yelekli, engelsiz, gözle anında seçilen yüzücüler neden kaçırılıyor?
+  *Tahmin (ölçülmedi):* 10 epoch'luk pilotun yetersiz eğitimi (`close_mosaic=10`
+  yüzünden mosaic hiç çalışmadı). 1280 tam koşusundan sonra bu kategori
+  kaybolmalı; kaybolmazsa daha derin bir sorun var. **Test edilecek somut tahmin budur.**
+  Ayrıca anotasyon eksikliğinin sistematik olup olmadığı (belirli video/drone'larda
+  mı yoğunlaşıyor) **ölçülmedi** — `manifest.csv` ile `source.video` birleştirilerek
+  bakılabilir.
+
 ---
 
 ## 2026-08-14 — Hata analizi: FP taksonomisi, kırpıntılar, kalibrasyon
@@ -45,6 +149,9 @@ makinesi değil. Mutlak süreler o makinede farklı çıkabilir; oranlar korunur
   Çıktılar: `outputs/error_analysis/<tag>/` — manifest.csv, fp_summary.csv,
   fn_summary.csv, calibration.csv, summary.txt, figures/ (3 grafik),
   crops/<hata_tipi>/<sınıf>/<bant>/ (A için 1597 kırpıntı).
+  Birleştirilmiş hâli: `outputs/tables/errors_summary.csv` (model×bant×hata tipi,
+  sayı + ortalama güven) ve `outputs/tables/calibration.csv` (üç model bir arada).
+  Kırpıntıların görsel sınıflandırması: [error-taxonomy.md](error-taxonomy.md).
 
 - **Dikkat çeken:**
   1. **Baskın hata modu iki model için farklı.** Kapalı kümede lokalizasyon (%67),
@@ -142,6 +249,8 @@ makinesi değil. Mutlak süreler o makinede farklı çıkabilir; oranlar korunur
 
   Sınıf-bazlı NMS'in attığı mükerrer kutu: kanonik 65 (%0.3), öznitelikli 6355 (%7.8).
 
+  Sınıf×bant×sorgu seti kırılımı: `outputs/tables/results_openvocab.csv`.
+
 - **Dikkat çeken:**
   1. **Öznitelikli ifadeler yalnızca swimmer'da net kazanç veriyor (2.7×).** "person
      floating in the water" / "orange life vest", çıplak "swimmer" kelimesini açık
@@ -183,6 +292,8 @@ makinesi değil. Mutlak süreler o makinede farklı çıkabilir; oranlar korunur
 
   Sınıf bazında mAP@50 (tümü): boat 0.934, jetski 0.865, swimmer 0.690,
   buoy 0.581, life_saving_appliances 0.189.
+
+  Sınıf×bant kırılımı, precision/recall dahil: `outputs/tables/results_closed_set.csv`.
 
 - **Dikkat çeken:**
   1. Bozulma monoton ve dik: `>64` → `<16` arasında mAP@50 0.892'den 0.177'ye
@@ -276,6 +387,9 @@ makinesi değil. Mutlak süreler o makinede farklı çıkabilir; oranlar korunur
   ve ~1230×933 civarında 15+ küçük varyant.
 
   Çıktılar: `outputs/eda/` (6 CSV + 4 PNG).
+  Kalıcı hâli: `outputs/tables/dataset_stats.csv` (sınıf başına görüntü sayısı ve
+  görüntü başına ortalama nesne dahil) ve `outputs/tables/size_distribution.csv`.
+  Veri setinin yapısı, alan tanımları ve tuzaklar: [data-notes.md](data-notes.md).
 
 - **Dikkat çeken:**
   1. **Sınıf dengesizliği ciddi:** swimmer 43302 vs life_saving_appliances 1253 (35×).
