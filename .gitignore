@@ -45,3 +45,6 @@ desktop.ini
 # bunlara atif veriyor ve outputs/{eda,comparison,metrics,runs} ile
 # error_analysis/*/figures toplami ~8 MB. Buyuk goruntu kumeleri zaten
 # yukaridaki dizin kurallariyla disarida.
+
+# Claude Code kisisel ayarlari (izin listesi)
+.claude/settings.local.json

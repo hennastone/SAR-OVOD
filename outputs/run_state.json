@@ -1,0 +1,158 @@
+{
+  "started": "2026-08-15T03:06:02+03:00",
+  "stages": {
+    "train_full": {
+      "status": "ok",
+      "returncode": 0,
+      "seconds": 20435.8,
+      "finished": "2026-08-15T08:46:38+03:00",
+      "log": "C:\\Users\\PC1\\OneDrive\\Desktop\\tez\\outputs\\logs\\train_full.log",
+      "required": true
+    },
+    "predict_a_full": {
+      "status": "ok",
+      "returncode": 0,
+      "seconds": 108.1,
+      "finished": "2026-08-15T08:48:26+03:00",
+      "log": "C:\\Users\\PC1\\OneDrive\\Desktop\\tez\\outputs\\logs\\predict_a_full.log",
+      "required": true
+    },
+    "eval_a_full": {
+      "status": "ok",
+      "returncode": 0,
+      "seconds": 3.7,
+      "finished": "2026-08-15T08:48:30+03:00",
+      "log": "C:\\Users\\PC1\\OneDrive\\Desktop\\tez\\outputs\\logs\\eval_a_full.log",
+      "required": true
+    },
+    "eval_a_full_coco": {
+      "status": "ok",
+      "returncode": 0,
+      "seconds": 2.8,
+      "finished": "2026-08-15T08:48:32+03:00",
+      "log": "C:\\Users\\PC1\\OneDrive\\Desktop\\tez\\outputs\\logs\\eval_a_full_coco.log",
+      "required": false
+    },
+    "predict_b_canon_1280": {
+      "status": "ok",
+      "returncode": 0,
+      "seconds": 107.1,
+      "finished": "2026-08-15T08:50:19+03:00",
+      "log": "C:\\Users\\PC1\\OneDrive\\Desktop\\tez\\outputs\\logs\\predict_b_canon_1280.log",
+      "required": false
+    },
+    "predict_b_attr_1280": {
+      "status": "ok",
+      "returncode": 0,
+      "seconds": 106.5,
+      "finished": "2026-08-15T08:52:06+03:00",
+      "log": "C:\\Users\\PC1\\OneDrive\\Desktop\\tez\\outputs\\logs\\predict_b_attr_1280.log",
+      "required": false
+    },
+    "eval_b_canon_1280": {
+      "status": "ok",
+      "returncode": 0,
+      "seconds": 1.7,
+      "finished": "2026-08-15T08:52:08+03:00",
+      "log": "C:\\Users\\PC1\\OneDrive\\Desktop\\tez\\outputs\\logs\\eval_b_canon_1280.log",
+      "required": false
+    },
+    "eval_b_attr_1280": {
+      "status": "ok",
+      "returncode": 0,
+      "seconds": 4.9,
+      "finished": "2026-08-15T08:52:13+03:00",
+      "log": "C:\\Users\\PC1\\OneDrive\\Desktop\\tez\\outputs\\logs\\eval_b_attr_1280.log",
+      "required": false
+    },
+    "eval_b_canon_coco": {
+      "status": "ok",
+      "returncode": 0,
+      "seconds": 1.5,
+      "finished": "2026-08-15T08:52:14+03:00",
+      "log": "C:\\Users\\PC1\\OneDrive\\Desktop\\tez\\outputs\\logs\\eval_b_canon_coco.log",
+      "required": false
+    },
+    "eval_b_attr_coco": {
+      "status": "ok",
+      "returncode": 0,
+      "seconds": 4.1,
+      "finished": "2026-08-15T08:52:18+03:00",
+      "log": "C:\\Users\\PC1\\OneDrive\\Desktop\\tez\\outputs\\logs\\eval_b_attr_coco.log",
+      "required": false
+    },
+    "conf_separation": {
+      "status": "ok",
+      "returncode": 0,
+      "seconds": 1.8,
+      "finished": "2026-08-15T08:52:20+03:00",
+      "log": "C:\\Users\\PC1\\OneDrive\\Desktop\\tez\\outputs\\logs\\conf_separation.log",
+      "required": false
+    },
+    "errors_a_full_c025": {
+      "status": "ok",
+      "returncode": 0,
+      "seconds": 40.5,
+      "finished": "2026-08-15T08:53:00+03:00",
+      "log": "C:\\Users\\PC1\\OneDrive\\Desktop\\tez\\outputs\\logs\\errors_a_full_c025.log",
+      "required": true
+    },
+    "errors_a_full_c010": {
+      "status": "ok",
+      "returncode": 0,
+      "seconds": 1.3,
+      "finished": "2026-08-15T08:53:02+03:00",
+      "log": "C:\\Users\\PC1\\OneDrive\\Desktop\\tez\\outputs\\logs\\errors_a_full_c010.log",
+      "required": false
+    },
+    "errors_a_full_c040": {
+      "status": "ok",
+      "returncode": 0,
+      "seconds": 1.2,
+      "finished": "2026-08-15T08:53:03+03:00",
+      "log": "C:\\Users\\PC1\\OneDrive\\Desktop\\tez\\outputs\\logs\\errors_a_full_c040.log",
+      "required": false
+    },
+    "errors_a_full_c050": {
+      "status": "ok",
+      "returncode": 0,
+      "seconds": 1.2,
+      "finished": "2026-08-15T08:53:04+03:00",
+      "log": "C:\\Users\\PC1\\OneDrive\\Desktop\\tez\\outputs\\logs\\errors_a_full_c050.log",
+      "required": false
+    },
+    "speed": {
+      "status": "ok",
+      "returncode": 0,
+      "seconds": 21.4,
+      "finished": "2026-08-15T08:53:26+03:00",
+      "log": "C:\\Users\\PC1\\OneDrive\\Desktop\\tez\\outputs\\logs\\speed.log",
+      "required": false
+    },
+    "compare": {
+      "status": "ok",
+      "returncode": 0,
+      "seconds": 0.6,
+      "finished": "2026-08-15T08:53:26+03:00",
+      "log": "C:\\Users\\PC1\\OneDrive\\Desktop\\tez\\outputs\\logs\\compare.log",
+      "required": false
+    },
+    "tables": {
+      "status": "ok",
+      "returncode": 0,
+      "seconds": 0.5,
+      "finished": "2026-08-15T08:53:27+03:00",
+      "log": "C:\\Users\\PC1\\OneDrive\\Desktop\\tez\\outputs\\logs\\tables.log",
+      "required": false
+    },
+    "export_md": {
+      "status": "ok",
+      "returncode": 0,
+      "seconds": 0.3,
+      "finished": "2026-08-15T08:53:27+03:00",
+      "log": "C:\\Users\\PC1\\OneDrive\\Desktop\\tez\\outputs\\logs\\export_md.log",
+      "required": false
+    }
+  },
+  "updated": "2026-08-15T08:53:27+03:00"
+}

@@ -248,9 +248,13 @@ def main():
     p.add_argument("--max-crops", type=int, default=60,
                    help="klasor basina en fazla kirpinti (0 = kirpinti kaydetme)")
     p.add_argument("--no-crops", action="store_true")
+    p.add_argument("--out-tag", default=None,
+                   help="cikti klasoru adi (varsayilan: --tag). Ayni tag'i farkli "
+                        "--conf degerleriyle kosturuyorsaniz SART - yoksa kosular "
+                        "ayni klasore yazip birbirini ezer.")
     args = p.parse_args()
 
-    out_root = args.out_dir / args.tag
+    out_root = args.out_dir / (args.out_tag or args.tag)
     (out_root / "figures").mkdir(parents=True, exist_ok=True)
 
     with open(args.gt, encoding="utf-8") as f:

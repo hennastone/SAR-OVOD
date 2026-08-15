@@ -1,0 +1,14 @@
+# compare
+# C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/07_compare_baselines.py --tags baseline_a_full baseline_b_canonical_1280 baseline_b_attributed_1280 --labels A: YOLO11s @1280 B: YOLO-World kanonik B: YOLO-World oznitelikli
+# baslangic 2026-08-15T08:53:26+03:00
+
+                   mAP@50                                                            mAP@50-95                                                             AR@50-95                                                     
+tag       baseline_a_full baseline_b_attributed_1280 baseline_b_canonical_1280 baseline_a_full baseline_b_attributed_1280 baseline_b_canonical_1280 baseline_a_full baseline_b_attributed_1280 baseline_b_canonical_1280
+size_band                                                                                                                                                                                                               
+<16                0.5787                     0.0082                    0.0053          0.2236                     0.0029                    0.0016          0.2990                     0.0590                    0.0073
+16-32              0.8335                     0.0761                    0.0328          0.4806                     0.0277                    0.0121          0.5424                     0.2203                    0.1009
+32-64              0.8252                     0.1841                    0.1529          0.5174                     0.0743                    0.0591          0.5990                     0.3116                    0.2516
+>64                0.9098                     0.2662                    0.3734          0.6333                     0.1600                    0.2432          0.7156                     0.4321                    0.4841
+all                0.8364                     0.1906                    0.1830          0.5225                     0.1040                    0.1093          0.5944                     0.3113                    0.2620
+
+Ciktilar: outputs\comparison/

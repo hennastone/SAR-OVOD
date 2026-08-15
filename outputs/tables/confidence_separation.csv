@@ -1,0 +1,4 @@
+tag,size_band,n_tp,n_fp,auroc,ks,ks_at_conf,overlap,youden_j,youden_at_conf,tp_mean_conf,fp_mean_conf,tp_median_conf,fp_median_conf
+baseline_a_full,all,8637,3570,0.9224,0.7028,0.508,0.2997,0.7028,0.508,0.7116,0.2594,0.746,0.1424
+baseline_b_canonical_1280,all,1975,5537,0.8489,0.5911,0.276,0.4106,0.5911,0.276,0.5323,0.1631,0.5851,0.1095
+baseline_b_attributed_1280,all,5077,21637,0.7858,0.4443,0.484,0.5558,0.4443,0.484,0.6175,0.278,0.7217,0.1733

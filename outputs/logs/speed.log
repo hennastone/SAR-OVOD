@@ -1,0 +1,10 @@
+# speed
+# C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/12_benchmark_speed.py --spec YOLO11s@1280=outputs/runs/baseline_a_full_1280/weights/best.pt --spec YOLO11s@640=outputs/runs/baseline_a_pilot_640/weights/best.pt --n 300 --warmup 50
+# baslangic 2026-08-15T08:53:04+03:00
+
+[bench] YOLO11s @ 1280  (outputs/runs/baseline_a_full_1280/weights/best.pt)
+         27.97 ms  ->  35.8 FPS (medyan 26.89, p95 47.66)
+[bench] YOLO11s @ 640  (outputs/runs/baseline_a_pilot_640/weights/best.pt)
+         22.96 ms  ->  43.6 FPS (medyan 22.33, p95 42.04)
+
+Cikti: outputs\tables\timing_batch1.csv

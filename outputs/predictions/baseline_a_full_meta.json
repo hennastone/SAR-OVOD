@@ -1,0 +1,17 @@
+{
+  "tag": "baseline_a_full",
+  "weights": "outputs/runs/baseline_a_full_1280/weights/best.pt",
+  "imgsz": 1280,
+  "conf": 0.001,
+  "iou_nms": 0.7,
+  "max_det": 300,
+  "n_images": 1547,
+  "n_detections": 58333,
+  "wall_seconds": 101.81,
+  "mean_speed_ms": {
+    "preprocess": 3.66,
+    "inference": 6.07,
+    "postprocess": 1.2
+  },
+  "note": "hiz sadece kaba gostergedir; resmi olcum 08_benchmark_speed.py"
+}

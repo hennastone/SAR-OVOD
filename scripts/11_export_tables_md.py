@@ -38,7 +38,21 @@ SECTIONS = [
      "0.1'lik kovalar. `fraction_correct` = o kovadaki tespitlerin TP orani. "
      "Kalibrasyon eslestirmesi `conf>=0.05` ile yapildi, bu yuzden ilk kova "
      "yalnizca 0.05-0.10 araligini kapsar."),
-    ("timing.csv", "Hiz (KISMI - bkz. not)",
+    ("results_coco_bands.csv", "Standart COCO bantlari (AP_S / AP_M / AP_L)",
+     "Literaturle kiyaslanabilirlik icin. Alan esikleri: small < 32^2, "
+     "medium 32^2-96^2, large > 96^2. Ayni kosumdan, sadece alan araliklari "
+     "farkli - `all` satiri sqrt tablosuyla birebir ayni olmali."),
+    ("confidence_separation.csv", "TP/FP guven skoru ayrismasi",
+     "Kalibrasyondan FARKLI bir soru: guven skoru dogru ve yanlis tespitleri "
+     "ne kadar ayiriyor? `auroc` 0.5 = bilgisiz, 1.0 = mukemmel. `overlap` "
+     "histogram kesisimi (1 = tamamen ic ice). `youden_at_conf` en iyi tek esik."),
+    ("confidence_separation_by_band.csv", "TP/FP ayrismasi - boyut bandina gore",
+     "Ayni metrikler, nesne boyutuna gore kirilim."),
+    ("timing_batch1.csv", "Hiz - batch=1, isinma haric (ADIM 5)",
+     "`12_benchmark_speed.py` ciktisi. torch.cuda.synchronize() ile uctan uca "
+     "olcum, ilk turlar atilir. Asagidaki `timing.csv`'nin aksine bu "
+     "karsilastirmali iddia icin kullanilabilir."),
+    ("timing.csv", "Hiz - kaba gosterge (KISMI - bkz. not)",
      "**`latency_ms_batch1`, `fps_batch1`, `warmup_excluded` OLCULMEDI** (adim 5 "
      "kosulmadi). Dolu sutunlar tahmin kosusunun yan urunu: chunk=16, batch=1 "
      "degil, isinma turlari haric tutulmadi. Karsilastirmali hiz iddiasi icin "

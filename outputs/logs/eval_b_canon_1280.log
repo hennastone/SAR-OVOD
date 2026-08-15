@@ -1,0 +1,37 @@
+# eval_b_canon_1280
+# C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/05_eval_detection.py --pred outputs/predictions/baseline_b_canonical_1280.json --tag baseline_b_canonical_1280
+# baslangic 2026-08-15T08:52:06+03:00
+
+loading annotations into memory...
+Done (t=0.01s)
+creating index...
+index created!
+Loading and preparing results...
+DONE (t=0.02s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=1.11s).
+Accumulating evaluation results...
+DONE (t=0.17s).
+=== baseline_b_canonical_1280 ===
+
+Boyut bandina gore (tum siniflar):
+size_band  mAP@50-95  mAP@50  mAP@75  AR@50-95  n_gt
+      all     0.1093  0.1830  0.1162    0.2620  9630
+      <16     0.0016  0.0053  0.0001    0.0073   182
+    16-32     0.0121  0.0328  0.0051    0.1009  2784
+    32-64     0.0591  0.1529  0.0266    0.2516  3851
+      >64     0.2432  0.3734  0.2791    0.4841  2813
+
+Sinif x boyut bandi (mAP@50):
+size_band                 all    <16  16-32  32-64    >64
+category                                                 
+boat                   0.6451 0.0000 0.0202 0.5340 0.7424
+buoy                   0.1015 0.0210 0.0551 0.0460 0.3796
+jetski                 0.0142    NaN 0.0000 0.0108 0.0179
+life_saving_appliances 0.0000 0.0000 0.0000 0.0000    NaN
+swimmer                0.1543 0.0000 0.0888 0.1739 0.3538
+
+Ciktilar: outputs\metrics/baseline_b_canonical_1280_*

@@ -1,0 +1,43 @@
+{
+  "tag": "baseline_b_canonical_1280",
+  "baseline": "B (YOLO-World zero-shot)",
+  "model": "yolov8s-worldv2.pt",
+  "prompt_set": "canonical",
+  "prompt_set_description": "(a) kanonik sinif adlari - SeaDronesSee etiket isimlerinin dogrudan karsiligi",
+  "prompts": [
+    {
+      "text": "swimmer",
+      "category_id": 1
+    },
+    {
+      "text": "boat",
+      "category_id": 2
+    },
+    {
+      "text": "jetski",
+      "category_id": 3
+    },
+    {
+      "text": "life saving appliance",
+      "category_id": 4
+    },
+    {
+      "text": "buoy",
+      "category_id": 5
+    }
+  ],
+  "imgsz": 1280,
+  "conf": 0.001,
+  "iou_nms": 0.7,
+  "max_det": 300,
+  "n_images": 1547,
+  "n_detections": 43271,
+  "dedup_removed_by_class_nms": 14,
+  "wall_seconds": 102.56,
+  "mean_speed_ms": {
+    "preprocess": 3.73,
+    "inference": 6.99,
+    "postprocess": 1.23
+  },
+  "note": "hiz kaba gostergedir; resmi olcum 08_benchmark_speed.py"
+}

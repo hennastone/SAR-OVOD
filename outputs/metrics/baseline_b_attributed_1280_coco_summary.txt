@@ -1,0 +1,17 @@
+=== baseline_b_attributed_1280 ===
+
+Boyut bandina gore (tum siniflar):
+size_band  mAP@50-95  mAP@50  mAP@75  AR@50-95  n_gt
+      all     0.1040  0.1906  0.1015    0.3113  9630
+    small     0.0256  0.0704  0.0119    0.2121  2966
+   medium     0.0570  0.1389  0.0346    0.2858  4796
+    large     0.2035  0.3328  0.2283    0.4724  1868
+
+Sinif x boyut bandi (mAP@50):
+size_band                 all  small  medium  large
+category                                           
+boat                   0.5513 0.0095  0.2146 0.7864
+buoy                   0.0436 0.0780  0.0140 0.0163
+jetski                 0.0341 0.0116  0.0576 0.0336
+life_saving_appliances 0.0036 0.0001  0.0220    NaN
+swimmer                0.3201 0.2530  0.3861 0.4950

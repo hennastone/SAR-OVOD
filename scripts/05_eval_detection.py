@@ -28,13 +28,30 @@ from pycocotools.coco import COCO
 from pycocotools.cocoeval import COCOeval
 
 # (etiket, [alan_min, alan_max])
-AREA_RNG = [
-    ("all", [0.0, 1e10]),
-    ("<16", [0.0, 256.0]),
-    ("16-32", [256.0, 1024.0]),
-    ("32-64", [1024.0, 4096.0]),
-    (">64", [4096.0, 1e10]),
-]
+#
+# Iki bant tanimi destekleniyor:
+#   sqrt : bu projenin tercihi - sqrt(w*h) kenar uzunlugu bantlari
+#   coco : literaturle kiyaslanabilirlik icin standart COCO esikleri
+#          (small < 32^2, medium 32^2-96^2, large > 96^2)
+# Hakemler COCO tablosunu isteyecegi icin ikisi de uretiliyor; sayilar
+# ayni kosudan, sadece alan araliklari farkli.
+BAND_SETS = {
+    "sqrt": [
+        ("all", [0.0, 1e10]),
+        ("<16", [0.0, 256.0]),
+        ("16-32", [256.0, 1024.0]),
+        ("32-64", [1024.0, 4096.0]),
+        (">64", [4096.0, 1e10]),
+    ],
+    "coco": [
+        ("all", [0.0, 1e10]),
+        ("small", [0.0, 1024.0]),        # < 32^2
+        ("medium", [1024.0, 9216.0]),    # 32^2 - 96^2
+        ("large", [9216.0, 1e10]),       # > 96^2
+    ],
+}
+
+AREA_RNG = BAND_SETS["sqrt"]   # main() secime gore degistirir
 
 
 def load_gt(gt_path: Path) -> COCO:
@@ -118,7 +135,15 @@ def main():
     p.add_argument("--tag", required=True)
     p.add_argument("--gt", type=Path, default=Path("data/annotations/instances_val.json"))
     p.add_argument("--out-dir", type=Path, default=Path("outputs/metrics"))
+    p.add_argument("--bands", choices=list(BAND_SETS), default="sqrt",
+                   help="sqrt: sqrt(w*h) kenar bantlari | coco: standart AP_S/M/L")
     args = p.parse_args()
+
+    # coco secilirse dosya adlarina son ek gelir; sqrt varsayilani mevcut
+    # dosya adlarini degistirmez (geriye donuk uyumluluk).
+    global AREA_RNG
+    AREA_RNG = BAND_SETS[args.bands]
+    suffix = "" if args.bands == "sqrt" else f"_{args.bands}"
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -129,8 +154,8 @@ def main():
     e = build_eval(gt, args.pred, cat_ids)
     overall, per_class = extract(e, cat_ids, cat_names)
 
-    overall.to_csv(args.out_dir / f"{args.tag}_overall.csv", index=False)
-    per_class.to_csv(args.out_dir / f"{args.tag}_per_class.csv", index=False)
+    overall.to_csv(args.out_dir / f"{args.tag}{suffix}_overall.csv", index=False)
+    per_class.to_csv(args.out_dir / f"{args.tag}{suffix}_per_class.csv", index=False)
 
     lines = [f"=== {args.tag} ===", "", "Boyut bandina gore (tum siniflar):",
              overall.to_string(index=False, float_format=lambda v: f"{v:.4f}"),
@@ -139,9 +164,9 @@ def main():
                  [lbl for lbl, _ in AREA_RNG]
              ].to_string(float_format=lambda v: f"{v:.4f}")]
     text = "\n".join(lines)
-    (args.out_dir / f"{args.tag}_summary.txt").write_text(text, encoding="utf-8")
+    (args.out_dir / f"{args.tag}{suffix}_summary.txt").write_text(text, encoding="utf-8")
     print(text)
-    print(f"\nCiktilar: {args.out_dir}/{args.tag}_*")
+    print(f"\nCiktilar: {args.out_dir}/{args.tag}{suffix}_*")
 
 
 if __name__ == "__main__":

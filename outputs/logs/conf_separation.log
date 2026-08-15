@@ -1,0 +1,9 @@
+# conf_separation
+# C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/13_confidence_separation.py --tags baseline_a_full baseline_b_canonical_1280 baseline_b_attributed_1280
+# baslangic 2026-08-15T08:52:18+03:00
+
+eslestirme (baseline_a_full):   0%|          | 0/1547 [00:00<?, ?it/s]eslestirme (baseline_a_full):  66%|██████▌   | 1019/1547 [00:00<00:00, 10123.01it/s]                                                                                    baseline_a_full            AUROC 0.9224  KS 0.7028 @0.51  ortusme 0.2997  en iyi esik 0.51
+eslestirme (baseline_b_canonical_1280):   0%|          | 0/1547 [00:00<?, ?it/s]                                                                                baseline_b_canonical_1280  AUROC 0.8489  KS 0.5911 @0.28  ortusme 0.4106  en iyi esik 0.28
+eslestirme (baseline_b_attributed_1280):   0%|          | 0/1547 [00:00<?, ?it/s]eslestirme (baseline_b_attributed_1280):  35%|███▌      | 546/1547 [00:00<00:00, 4167.21it/s]eslestirme (baseline_b_attributed_1280):  66%|██████▌   | 1015/1547 [00:00<00:00, 4437.61it/s]                                                                                              baseline_b_attributed_1280 AUROC 0.7858  KS 0.4443 @0.48  ortusme 0.5558  en iyi esik 0.48
+
+Ciktilar: outputs\tables/confidence_separation*.csv, outputs\comparison/confidence_separation.png

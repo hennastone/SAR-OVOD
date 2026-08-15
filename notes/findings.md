@@ -12,23 +12,119 @@ makinesi değil. Mutlak süreler o makinede farklı çıkabilir; oranlar korunur
 [error-taxonomy.md](error-taxonomy.md) — hata kırpıntılarının görsel sınıflandırması ·
 `outputs/tables/` — aynı tabloların makine tarafından okunabilir CSV hâli
 
+## 2026-08-15 — Tam koşu @1280: üç sorunun cevabı + hız/COCO/ayrışma
+
+- **Çalıştırılan:** `scripts/run_unattended.py` (19 aşama, gözetimsiz).
+  Eğitim `03_train_yolo.py --preset full` → **86 epoch'ta erken durdu**
+  (`patience=30`, en iyi epoch 56), 340.6 dk = **5.7 saat** (tahmin 8.2 idi;
+  fark erken durdurma + `workers=8`'den epoch süresinin 295→236 sn'ye inmesi).
+  Sonra 04/05/06/08/12/13 + tablolar. Eşik taraması `--out-tag` ile ayrı
+  klasörlere yeniden koşuldu (aşağıdaki bug'a bakın).
+
+- **Sonuç — soru 1: `<16` bandı hâlâ ölü mü? HAYIR.**
+
+  | Bant (n) | pilot@640 | full@1280 | çarpan |
+  |---|---|---|---|
+  | `<16` (182) | 0.1767 | **0.5787** | **3.28×** |
+  | `16-32` (2784) | 0.5409 | 0.8335 | 1.54× |
+  | `32-64` (3851) | 0.7048 | 0.8252 | 1.17× |
+  | `>64` (2813) | 0.8919 | 0.9098 | 1.02× |
+  | tümü | 0.6516 | **0.8364** | 1.28× |
+
+  (mAP@50. mAP@50-95 tümü: 0.3775 → 0.5225.)
+
+  Bozulma eğrisi düzleşti: 640'ta uçtan uca 5.0× fark varken 1280'de 1.57×.
+
+- **Sonuç — soru 2: localization payı düştü mü? HAYIR (oran olarak).**
+  Aynı eşikte (conf 0.25) %67.2 → **%64.8**. Eşik taraması boyunca da baskın
+  kalıyor (conf 0.50'de %76.3). **Ama mutlak sayı yarıya indi:** 1595 → 833.
+  Yani oran korunurken tüm FP tipleri birlikte azalmış.
+
+  Eşik taraması (yeniden koşuldu, ayrı klasörler):
+
+  | koşu | conf | P | R | F1 | loc% | bg% | cls% | dup% |
+  |---|---|---|---|---|---|---|---|---|
+  | full@1280 | 0.10 | 0.791 | 0.891 | 0.838 | 54.1 | 20.9 | 6.1 | 18.9 |
+  | full@1280 | 0.25 | 0.868 | 0.879 | 0.874 | 64.8 | 20.8 | 6.6 | 7.9 |
+  | full@1280 | **0.40** | 0.899 | 0.853 | **0.875** | 72.0 | 19.9 | 5.5 | 2.6 |
+  | full@1280 | 0.50 | 0.916 | 0.807 | 0.858 | 76.3 | 17.3 | 5.3 | 1.1 |
+  | pilot@640 | 0.25 | 0.758 | 0.772 | 0.765 | 67.2 | 11.7 | 5.8 | 15.3 |
+
+- **Sonuç — soru 3: `net_izole` FN kategorisi kayboldu mu? HAYIR.**
+  Görsel inceleme (`outputs/error_analysis/baseline_a_full/contact_sheets/`):
+  açık suda, engelsiz, net görünen kaçırmalar hâlâ var.
+
+- **Diğer ölçümler:**
+  - **Hız (madde 2, batch=1, ısınma hariç):** 1280 → 27.97 ms / **35.8 FPS**;
+    640 → 22.96 ms / 43.6 FPS. n=300, ilk 50 tur atıldı.
+  - **COCO bantları (madde 7):** full@1280 AP_S 0.4724, AP_M 0.5283,
+    AP_L 0.6631 (pilot: 0.2552 / 0.4167 / 0.6133).
+  - **Güven ayrışması (madde 6):** full@1280 AUROC **0.9224**, KS 0.703,
+    örtüşme 0.300, en iyi eşik **0.508**. B kanonik 0.849, B öznitelikli 0.786.
+
+- **Dikkat çeken:**
+  1. **`<16` bandındaki 0.177 gerçekten ölçekleme artefaktıymış.** 3.3×
+     iyileşme, "küçük nesne zor" ifadesinin bu veri setinde büyük ölçüde
+     "girdi çözünürlüğü yetersiz" demek olduğunu gösteriyor. Tez için net bir
+     sonuç: bant sonuçları raporlanırken imgsz mutlaka belirtilmeli.
+  2. **`>64` bandındaki kaçırmalar ARTTI** (185 → 198), diğer tüm bantlar
+     iyileşirken. 198'in 148'i swimmer ve belirli videolarda yoğunlaşıyor:
+     `DJI_0032.MP4` 57 büyük swimmer'ın 34'ünü (%60), `DJI_0011_d3.mov`
+     56'nın 28'ini (%50) kaçırıyor; diğer videolarda oran ~%15.
+     Kırpıntılarda bunlar 410-648 px, sarı can yeleği giymiş, berrak suda,
+     tartışmasız görünen yüzücüler. **Model çok yakın çekim karelerde
+     sistematik olarak başarısız** — tezin küçük-nesne odağının tam tersi bir
+     ölçek sorunu. Bu, eğitim setinin küçük nesne ağırlıklı olmasının
+     bedeli gibi duruyor.
+  3. **Optimal eşik 0.25 değil ~0.4-0.5.** F1 conf 0.40'ta tepe yapıyor
+     (0.875), Youden J ise 0.508 diyor. Şimdiye kadarki tüm hata analizi
+     0.25'e dayanıyordu; oran bazlı sonuçlar (loc% vb.) eşiğe duyarlı.
+  4. **`background` FP payı arttı** (%11.7 → %20.8) model iyileşmesine rağmen.
+     Görsel taksonomiye göre bu kategorinin ~yarısı etiketsiz gerçek nesne
+     olduğuna göre beklenen davranış: daha iyi model, etiketlenmemiş gerçek
+     nesneleri daha çok buluyor. [error-taxonomy.md](error-taxonomy.md)
+  5. `duplicate` FP'leri neredeyse yok oldu (%15.3 → %7.9, conf 0.5'te %1.1).
+  6. **Bug — eşik taraması kendini eziyordu.** `08_error_analysis.py` dört
+     conf değeri için aynı `outputs/error_analysis/<tag>/` klasörüne yazıyordu;
+     ilk üç koşunun `summary.txt`/`manifest.csv`/`calibration.csv` çıktıları
+     sonuncusu tarafından siliniyordu. `--out-tag` eklendi ve tarama yeniden
+     koşuldu. Boru hattındaki ilk sonuçlar bu yüzden geçersizdi.
+  7. **`09_build_tables.py` pilot tag'lerine sabitlenmişti**, tam koşu bittikten
+     sonra bile tabloları 640 verisinden üretiyordu. `MODELS` altı tag'e
+     genişletildi, tablolara `run` ve `imgsz` sütunları eklendi. Altı tag'de de
+     TP=GT−FN özdeşliği doğrulandı.
+
+- **Sonraki soru:** Büyük-nesne başarısızlığı (bulgu 2) ölçek mi, sahne mi?
+  *Tahmin (ölçülmedi):* eğitim setinde `>64` bandı zaten az (train'de %27) ve
+  çok yakın çekim kareler daha da az; sorun ölçek dengesizliği. Test için
+  `DJI_0032` ve `DJI_0011_d3` karelerinin train'de temsil edilip edilmediğine
+  bakılmalı. Ayrıca **eşik seçimi maliyet-asimetrik olmalı** — SAR'da bir
+  kaçırma bir yanlış alarmdan pahalı, dolayısıyla F1 optimumu (0.40) doğru
+  kriter olmayabilir; recall ağırlıklı bir eşik gerekir.
+
+---
+
 ## ÖLÇÜLMEDİ — açık kalan metrikler
 
 Bu başlık bilerek en üstte. Aşağıdakiler hiçbir yerde kayıtlı değil; ilgili
 CSV hücreleri **boş bırakıldı**, tahminle doldurulmadı.
 
-| Metrik | Durum | Nerede boş |
+| Metrik | Durum | Nerede |
 |---|---|---|
-| Görüntü başına gecikme (batch=1) | **Ölçülmedi** — adım 5 hiç koşmadı | `outputs/tables/timing.csv` → `latency_ms_batch1` |
-| FPS (batch=1) | **Ölçülmedi** | `timing.csv` → `fps_batch1` |
-| Isınma turları hariç tutulmuş zamanlama | **Ölçülmedi** | `timing.csv` → `warmup_excluded` |
-| Baseline A tam koşu (1280, 100 epoch) | **Koşulmadı** — ~8.2 saat | tüm sonuç tabloları 640 pilotuna ait |
+| Görüntü başına gecikme (batch=1) | **ÖLÇÜLDÜ** 2026-08-15 | `outputs/tables/timing_batch1.csv` |
+| FPS (batch=1) | **ÖLÇÜLDÜ** — 1280: 35.8, 640: 43.6 | aynı dosya |
+| Baseline A tam koşu | **KOŞULDU** — 86 epoch, 5.7 saat | `outputs/runs/baseline_a_full_1280/` |
+| COCO AP_S/M/L | **ÖLÇÜLDÜ** | `outputs/tables/results_coco_bands.csv` |
+| TP/FP güven ayrışması | **ÖLÇÜLDÜ** | `outputs/tables/confidence_separation*.csv` |
+| Güven eşiği taraması | **ÖLÇÜLDÜ** — 0.10/0.25/0.40/0.50 | `outputs/error_analysis/*_conf0*/` |
+| Tiling / SAHI temel çizgisi | **Koşulmadı** — yarım gün, eğitim gerektirmez | — |
+| Etiket eksikliğinin nicelleştirilmesi | **Koşulmadı** — elle etiketleme | — |
+| Jetson / gömülü donanımda hız | **Ölçülmedi** — masaüstü GPU sayıları bu kararı veremez | — |
 
-`timing.csv`'de dolu olan sütunlar (`preprocess_ms`, `inference_ms`,
-`postprocess_ms`, `throughput_img_per_s_wallclock`) tahmin koşusunun yan ürünü:
-**chunk=16 ile alındı, batch=1 değil ve ısınma turları hariç tutulmadı.**
-Karşılaştırmalı hız iddiası için kullanılamaz; satırdaki `measurement_note`
-sütunu bunu taşıyor.
+Resmi hız ölçümü artık `timing_batch1.csv` (batch=1, ısınma hariç,
+`torch.cuda.synchronize()`). Eski `timing.csv` chunk=16 ile alınmış kaba
+göstergedir; karşılaştırmalı iddia için kullanılmamalı, sadece referans olarak
+duruyor.
 
 Ayrıca ölçülmemiş, daha küçük başlıklar: görsel taksonomi örnekleminin tüm
 hata kümesine genellenebilirliği; anotasyon eksikliğinin sistematikliği;

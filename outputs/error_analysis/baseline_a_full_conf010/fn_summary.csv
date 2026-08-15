@@ -1,0 +1,17 @@
+size_band,category,count
+16-32,boat,6
+16-32,buoy,22
+16-32,life_saving_appliances,96
+16-32,swimmer,327
+32-64,boat,39
+32-64,buoy,1
+32-64,jetski,7
+32-64,life_saving_appliances,44
+32-64,swimmer,293
+<16,boat,1
+<16,life_saving_appliances,2
+<16,swimmer,26
+>64,boat,23
+>64,buoy,3
+>64,jetski,23
+>64,swimmer,135

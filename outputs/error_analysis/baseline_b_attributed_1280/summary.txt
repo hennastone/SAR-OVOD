@@ -1,0 +1,36 @@
+=== baseline_b_attributed_1280 | conf>=0.25, IoU>=0.5 ===
+
+TP: 3944   FP: 8247   FN: 5686
+precision: 0.3235   recall: 0.4096
+
+Yanlis pozitif tipi (baskin hata modu):
+  background         2203  ( 26.7%)
+  class_confusion    3004  ( 36.4%)
+  localization       2171  ( 26.3%)
+  duplicate           869  ( 10.5%)
+
+FP tipi x boyut bandi:
+fp_type    background  class_confusion  duplicate  localization
+size_band                                                      
+<16                12                2          0             5
+16-32             329              642        103           405
+32-64            1011             1211        259           645
+>64               851             1149        507          1116
+
+Sinif karisikligi (tahmin -> gercek):
+confused_with           boat  buoy  jetski  life_saving_appliances  swimmer
+category                                                                   
+boat                       0   110     325                      19      845
+buoy                      54     0       1                      10      233
+jetski                   182    42       0                       2      786
+life_saving_appliances     0     1       0                       0       10
+swimmer                  125   199      57                       3        0
+
+Yanlis negatif, boyut bandina gore:
+size_band
+<16       181
+16-32    2177
+32-64    2307
+>64      1021
+
+ECE (guven kalibrasyon hatasi): 0.1525

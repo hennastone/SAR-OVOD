@@ -1,0 +1,43 @@
+# errors_a_full_c010
+# C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/08_error_analysis.py --tag baseline_a_full --conf 0.10 --no-crops
+# baslangic 2026-08-15T08:53:00+03:00
+
+eslestirme (baseline_a_full):   0%|          | 0/1547 [00:00<?, ?it/s]eslestirme (baseline_a_full):  44%|████▍     | 681/1547 [00:00<00:00, 6765.62it/s]eslestirme (baseline_a_full):  88%|████████▊ | 1358/1547 [00:00<00:00, 6670.08it/s]eslestirme (baseline_a_full): 100%|██████████| 1547/1547 [00:00<00:00, 6883.91it/s]
+=== baseline_a_full | conf>=0.1, IoU>=0.5 ===
+
+TP: 8582   FP: 2269   FN: 1048
+precision: 0.7909   recall: 0.8912
+
+Yanlis pozitif tipi (baskin hata modu):
+  background          474  ( 20.9%)
+  class_confusion     139  (  6.1%)
+  localization       1228  ( 54.1%)
+  duplicate           428  ( 18.9%)
+
+FP tipi x boyut bandi:
+fp_type    background  class_confusion  duplicate  localization
+size_band                                                      
+<16                34                1         22            15
+16-32             193               19        151           354
+32-64             133               51        212           650
+>64               114               68         43           209
+
+Sinif karisikligi (tahmin -> gercek):
+confused_with           boat  buoy  jetski  life_saving_appliances  swimmer
+category                                                                   
+boat                       0     1      18                       0       14
+buoy                       1     0       1                       0        2
+jetski                     7     0       0                       0       18
+life_saving_appliances     0     0       0                       0       36
+swimmer                    3     0       5                      33        0
+
+Yanlis negatif, boyut bandina gore:
+size_band
+<16       29
+16-32    451
+32-64    384
+>64      184
+
+ECE (guven kalibrasyon hatasi): 0.1436
+
+Ciktilar: outputs\error_analysis\baseline_a_full/

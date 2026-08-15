@@ -33,10 +33,23 @@ BANDS = ["<16", "16-32", "32-64", ">64"]
 CONF_THR, IOU_THR = 0.25, 0.5
 
 MODELS = {
-    "baseline_a_pilot": {"model": "YOLO11s fine-tune", "kind": "closed_set", "query_set": ""},
-    "baseline_b_canonical": {"model": "YOLO-World v2-s", "kind": "open_vocab", "query_set": "canonical"},
-    "baseline_b_attributed": {"model": "YOLO-World v2-s", "kind": "open_vocab", "query_set": "attributed"},
+    # --- asil kosu: 1280 ---
+    "baseline_a_full": {"model": "YOLO11s fine-tune", "kind": "closed_set",
+                        "query_set": "", "run": "full@1280", "imgsz": 1280},
+    "baseline_b_canonical_1280": {"model": "YOLO-World v2-s", "kind": "open_vocab",
+                                  "query_set": "canonical", "run": "full@1280", "imgsz": 1280},
+    "baseline_b_attributed_1280": {"model": "YOLO-World v2-s", "kind": "open_vocab",
+                                   "query_set": "attributed", "run": "full@1280", "imgsz": 1280},
+    # --- pilot: 640 (cozunurluk etkisini gostermek icin tabloda kaliyor) ---
+    "baseline_a_pilot": {"model": "YOLO11s fine-tune", "kind": "closed_set",
+                         "query_set": "", "run": "pilot@640", "imgsz": 640},
+    "baseline_b_canonical": {"model": "YOLO-World v2-s", "kind": "open_vocab",
+                             "query_set": "canonical", "run": "pilot@640", "imgsz": 640},
+    "baseline_b_attributed": {"model": "YOLO-World v2-s", "kind": "open_vocab",
+                              "query_set": "attributed", "run": "pilot@640", "imgsz": 640},
 }
+CLOSED = [t for t, m in MODELS.items() if m["kind"] == "closed_set"]
+OPEN = [t for t, m in MODELS.items() if m["kind"] == "open_vocab"]
 
 
 # ----------------------------------------------------------------- A1/A2
@@ -145,6 +158,25 @@ def verify_tp(tag: str, df: pd.DataFrame, ea_dir: Path) -> None:
 
 
 # ----------------------------------------------------------------- A5
+def coco_bands(metrics_dir: Path, out: Path) -> bool:
+    """Madde 7 - standart COCO AP_S/AP_M/AP_L tablosu.
+    05_eval_detection.py --bands coco ciktilarini toplar; yoksa atlanir."""
+    frames = []
+    for tag, meta in MODELS.items():
+        f = metrics_dir / f"{tag}_coco_overall.csv"
+        if not f.exists():
+            continue
+        df = pd.read_csv(f)
+        df.insert(0, "query_set", meta["query_set"])
+        df.insert(0, "model", meta["model"])
+        df.insert(0, "tag", tag)
+        frames.append(df)
+    if not frames:
+        return False
+    pd.concat(frames, ignore_index=True).to_csv(out, index=False)
+    return True
+
+
 def errors_summary(ea_dir: Path, out: Path) -> None:
     rows = []
     for tag, meta in MODELS.items():
@@ -244,23 +276,30 @@ def main():
     size_distribution(args.eda_dir, args.out_dir / "size_distribution.csv")
 
     print("TP ozdesligi kontrolu:")
-    closed = results_table("baseline_a_pilot", args.metrics_dir, args.ea_dir, args.eda_dir)
-    verify_tp("baseline_a_pilot", closed, args.ea_dir)
-    closed.insert(0, "model", MODELS["baseline_a_pilot"]["model"])
-    closed.to_csv(args.out_dir / "results_closed_set.csv", index=False)
-
-    ov = []
-    for tag in ["baseline_b_canonical", "baseline_b_attributed"]:
-        df = results_table(tag, args.metrics_dir, args.ea_dir, args.eda_dir)
-        verify_tp(tag, df, args.ea_dir)
-        df.insert(0, "query_set", MODELS[tag]["query_set"])
-        df.insert(0, "model", MODELS[tag]["model"])
-        ov.append(df)
-    pd.concat(ov, ignore_index=True).to_csv(args.out_dir / "results_openvocab.csv", index=False)
+    for group, tags, out_name in (("kapali kume", CLOSED, "results_closed_set.csv"),
+                                  ("acik kelime", OPEN, "results_openvocab.csv")):
+        frames = []
+        for tag in tags:
+            if not (args.ea_dir / tag / "fp_summary.csv").exists():
+                print(f"  [atlandi] {tag}: hata analizi ciktisi yok")
+                continue
+            df = results_table(tag, args.metrics_dir, args.ea_dir, args.eda_dir)
+            verify_tp(tag, df, args.ea_dir)
+            m = MODELS[tag]
+            if m["query_set"]:
+                df.insert(0, "query_set", m["query_set"])
+            df.insert(0, "imgsz", m["imgsz"])
+            df.insert(0, "run", m["run"])
+            df.insert(0, "model", m["model"])
+            frames.append(df)
+        if frames:
+            pd.concat(frames, ignore_index=True).to_csv(args.out_dir / out_name, index=False)
 
     errors_summary(args.ea_dir, args.out_dir / "errors_summary.csv")
     calibration(args.ea_dir, args.out_dir / "calibration.csv")
     timing(args.pred_dir, args.out_dir / "timing.csv")
+    if not coco_bands(args.metrics_dir, args.out_dir / "results_coco_bands.csv"):
+        print("  (COCO bant tablosu atlandi - once 05'i --bands coco ile kosturun)")
 
     print(f"\nCiktilar: {args.out_dir}/")
     for f in sorted(args.out_dir.glob("*.csv")):

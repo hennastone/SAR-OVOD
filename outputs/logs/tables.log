@@ -1,0 +1,23 @@
+# tables
+# C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/09_build_tables.py
+# baslangic 2026-08-15T08:53:26+03:00
+
+TP ozdesligi kontrolu:
+  baseline_a_pilot: TP dogrulandi (7435)
+  baseline_b_canonical: TP dogrulandi (1057)
+  baseline_b_attributed: TP dogrulandi (2693)
+
+Ciktilar: outputs\tables/
+  calibration.csv                 30 satir
+  confidence_separation.csv        3 satir
+  confidence_separation_by_band.csv    12 satir
+  dataset_stats.csv               12 satir
+  errors_summary.csv              72 satir
+  fn_visual_taxonomy_sample.csv    48 satir
+  fp_visual_taxonomy_sample.csv    81 satir
+  results_closed_set.csv          20 satir
+  results_coco_bands.csv           4 satir
+  results_openvocab.csv           40 satir
+  size_distribution.csv           40 satir
+  timing.csv                       3 satir
+  timing_batch1.csv                2 satir

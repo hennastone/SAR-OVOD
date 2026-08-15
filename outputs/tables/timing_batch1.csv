@@ -1,0 +1,3 @@
+model,imgsz,weights,batch_size,hardware,n_prompts,conf,iou_nms,n_measured,warmup_excluded,latency_ms_mean,latency_ms_median,latency_ms_p95,latency_ms_min,latency_ms_max,latency_ms_std,fps_batch1,method
+YOLO11s,1280,outputs/runs/baseline_a_full_1280/weights/best.pt,1,"NVIDIA GeForce RTX 5070, torch 2.12.0.dev20260408+cu128, Windows 11",,0.25,0.7,300,50,27.971,26.886,47.658,12.702,64.803,8.264,35.75,torch.cuda.synchronize() ile uctan uca; isinma turlari haric
+YOLO11s,640,outputs/runs/baseline_a_pilot_640/weights/best.pt,1,"NVIDIA GeForce RTX 5070, torch 2.12.0.dev20260408+cu128, Windows 11",,0.25,0.7,300,50,22.959,22.331,42.038,9.224,61.258,7.737,43.56,torch.cuda.synchronize() ile uctan uca; isinma turlari haric

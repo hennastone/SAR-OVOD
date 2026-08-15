@@ -1,0 +1,129 @@
+[2026-08-15T03:06:02+03:00] gozetimsiz kosu basliyor - 19 asama
+durum dosyasi: C:\Users\PC1\OneDrive\Desktop\tez\outputs\run_state.json
+
+======================================================================
+[2026-08-15T03:06:02+03:00] ASAMA: train_full
+  not: ~8.2 saat. Madde 1 - bloklayici.
+  komut: C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/03_train_yolo.py --preset full --name baseline_a_full_1280 --workers 8
+  log  : C:\Users\PC1\OneDrive\Desktop\tez\outputs\logs\train_full.log
+  sonuc: OK  (340.6 dk)
+
+======================================================================
+[2026-08-15T08:46:38+03:00] ASAMA: predict_a_full
+  not: 1280 agirligiyla val tahminleri
+  komut: C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/04_predict_to_json.py --weights outputs/runs/baseline_a_full_1280/weights/best.pt --imgsz 1280 --tag baseline_a_full
+  log  : C:\Users\PC1\OneDrive\Desktop\tez\outputs\logs\predict_a_full.log
+  sonuc: OK  (1.8 dk)
+
+======================================================================
+[2026-08-15T08:48:26+03:00] ASAMA: eval_a_full
+  not: Boyut bandi metrikleri. <16 bandi hala olu mu?
+  komut: C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/05_eval_detection.py --pred outputs/predictions/baseline_a_full.json --tag baseline_a_full
+  log  : C:\Users\PC1\OneDrive\Desktop\tez\outputs\logs\eval_a_full.log
+  sonuc: OK  (0.1 dk)
+
+======================================================================
+[2026-08-15T08:48:30+03:00] ASAMA: eval_a_full_coco
+  not: Madde 7 - AP_S / AP_M / AP_L
+  komut: C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/05_eval_detection.py --pred outputs/predictions/baseline_a_full.json --tag baseline_a_full --bands coco
+  log  : C:\Users\PC1\OneDrive\Desktop\tez\outputs\logs\eval_a_full_coco.log
+  sonuc: OK  (0.0 dk)
+
+======================================================================
+[2026-08-15T08:48:32+03:00] ASAMA: predict_b_canon_1280
+  komut: C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/06_predict_yoloworld.py --prompt-set canonical --tag baseline_b_canonical_1280 --imgsz 1280
+  log  : C:\Users\PC1\OneDrive\Desktop\tez\outputs\logs\predict_b_canon_1280.log
+  sonuc: OK  (1.8 dk)
+
+======================================================================
+[2026-08-15T08:50:19+03:00] ASAMA: predict_b_attr_1280
+  komut: C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/06_predict_yoloworld.py --prompt-set attributed --tag baseline_b_attributed_1280 --imgsz 1280
+  log  : C:\Users\PC1\OneDrive\Desktop\tez\outputs\logs\predict_b_attr_1280.log
+  sonuc: OK  (1.8 dk)
+
+======================================================================
+[2026-08-15T08:52:06+03:00] ASAMA: eval_b_canon_1280
+  komut: C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/05_eval_detection.py --pred outputs/predictions/baseline_b_canonical_1280.json --tag baseline_b_canonical_1280
+  log  : C:\Users\PC1\OneDrive\Desktop\tez\outputs\logs\eval_b_canon_1280.log
+  sonuc: OK  (0.0 dk)
+
+======================================================================
+[2026-08-15T08:52:08+03:00] ASAMA: eval_b_attr_1280
+  komut: C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/05_eval_detection.py --pred outputs/predictions/baseline_b_attributed_1280.json --tag baseline_b_attributed_1280
+  log  : C:\Users\PC1\OneDrive\Desktop\tez\outputs\logs\eval_b_attr_1280.log
+  sonuc: OK  (0.1 dk)
+
+======================================================================
+[2026-08-15T08:52:13+03:00] ASAMA: eval_b_canon_coco
+  komut: C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/05_eval_detection.py --pred outputs/predictions/baseline_b_canonical_1280.json --tag baseline_b_canonical_1280 --bands coco
+  log  : C:\Users\PC1\OneDrive\Desktop\tez\outputs\logs\eval_b_canon_coco.log
+  sonuc: OK  (0.0 dk)
+
+======================================================================
+[2026-08-15T08:52:14+03:00] ASAMA: eval_b_attr_coco
+  komut: C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/05_eval_detection.py --pred outputs/predictions/baseline_b_attributed_1280.json --tag baseline_b_attributed_1280 --bands coco
+  log  : C:\Users\PC1\OneDrive\Desktop\tez\outputs\logs\eval_b_attr_coco.log
+  sonuc: OK  (0.1 dk)
+
+======================================================================
+[2026-08-15T08:52:18+03:00] ASAMA: conf_separation
+  not: Madde 6 - AUROC/KS/ortusme + en iyi esik
+  komut: C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/13_confidence_separation.py --tags baseline_a_full baseline_b_canonical_1280 baseline_b_attributed_1280
+  log  : C:\Users\PC1\OneDrive\Desktop\tez\outputs\logs\conf_separation.log
+  sonuc: OK  (0.0 dk)
+
+======================================================================
+[2026-08-15T08:52:20+03:00] ASAMA: errors_a_full_c025
+  not: localization payi dustu mu? net_izole FN kayboldu mu?
+  komut: C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/08_error_analysis.py --tag baseline_a_full --conf 0.25
+  log  : C:\Users\PC1\OneDrive\Desktop\tez\outputs\logs\errors_a_full_c025.log
+  sonuc: OK  (0.7 dk)
+
+======================================================================
+[2026-08-15T08:53:00+03:00] ASAMA: errors_a_full_c010
+  komut: C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/08_error_analysis.py --tag baseline_a_full --conf 0.10 --no-crops
+  log  : C:\Users\PC1\OneDrive\Desktop\tez\outputs\logs\errors_a_full_c010.log
+  sonuc: OK  (0.0 dk)
+
+======================================================================
+[2026-08-15T08:53:02+03:00] ASAMA: errors_a_full_c040
+  komut: C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/08_error_analysis.py --tag baseline_a_full --conf 0.40 --no-crops
+  log  : C:\Users\PC1\OneDrive\Desktop\tez\outputs\logs\errors_a_full_c040.log
+  sonuc: OK  (0.0 dk)
+
+======================================================================
+[2026-08-15T08:53:03+03:00] ASAMA: errors_a_full_c050
+  komut: C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/08_error_analysis.py --tag baseline_a_full --conf 0.50 --no-crops
+  log  : C:\Users\PC1\OneDrive\Desktop\tez\outputs\logs\errors_a_full_c050.log
+  sonuc: OK  (0.0 dk)
+
+======================================================================
+[2026-08-15T08:53:04+03:00] ASAMA: speed
+  not: Madde 2. batch=1, isinma haric.
+  komut: C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/12_benchmark_speed.py --spec YOLO11s@1280=outputs/runs/baseline_a_full_1280/weights/best.pt --spec YOLO11s@640=outputs/runs/baseline_a_pilot_640/weights/best.pt --n 300 --warmup 50
+  log  : C:\Users\PC1\OneDrive\Desktop\tez\outputs\logs\speed.log
+  sonuc: OK  (0.4 dk)
+
+======================================================================
+[2026-08-15T08:53:26+03:00] ASAMA: compare
+  komut: C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/07_compare_baselines.py --tags baseline_a_full baseline_b_canonical_1280 baseline_b_attributed_1280 --labels A: YOLO11s @1280 B: YOLO-World kanonik B: YOLO-World oznitelikli
+  log  : C:\Users\PC1\OneDrive\Desktop\tez\outputs\logs\compare.log
+  sonuc: OK  (0.0 dk)
+
+======================================================================
+[2026-08-15T08:53:26+03:00] ASAMA: tables
+  komut: C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/09_build_tables.py
+  log  : C:\Users\PC1\OneDrive\Desktop\tez\outputs\logs\tables.log
+  sonuc: OK  (0.0 dk)
+
+======================================================================
+[2026-08-15T08:53:27+03:00] ASAMA: export_md
+  komut: C:\Users\PC1\AppData\Local\Programs\Python\Python312\python.exe -u scripts/11_export_tables_md.py
+  log  : C:\Users\PC1\OneDrive\Desktop\tez\outputs\logs\export_md.log
+  sonuc: OK  (0.0 dk)
+
+======================================================================
+[2026-08-15T08:53:27+03:00] KOSU BITTI - toplam 5.79 saat
+basarili: 19   basarisiz: 0
+
+Durum ozeti icin: python scripts/run_unattended.py --list
